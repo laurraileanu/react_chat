@@ -10,19 +10,23 @@ import { CssBaseline } from '@material-ui/core';
 import Login from './components/auth/Login'
 import Signup from './components/auth/Signup'
 import Dashboard from './components/Dashboard';
+import AuthProvider from 'components/auth/authContext'
+import PrivateRoute from 'components/auth/PrivateRoute'
 
 const App = () => {
   return (
-    <ThemeProvider theme={customTheme}>
-      <CssBaseline />
-      <Router>
-        <Switch>
-          <Route exact path="/login" component={Login}></Route>
-          <Route exact path="/signup" component={Signup}></Route>
-          <Route exact path="/dashboard" component={Dashboard}></Route>
-        </Switch>
-      </Router>
-    </ThemeProvider>
+    <AuthProvider>
+      <ThemeProvider theme={customTheme}>
+        <CssBaseline />
+        <Router>
+          <Switch>
+            <PrivateRoute exact path="/" component={Dashboard}/>
+            <Route exact path="/login" component={Login}></Route>
+            <Route exact path="/signup" component={Signup}></Route>
+          </Switch>
+        </Router>
+      </ThemeProvider>
+    </AuthProvider>
   )
 }
 

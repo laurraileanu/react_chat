@@ -1,4 +1,5 @@
-import React, {useState} from 'react'
+import React, {useState, useContext} from 'react'
+import {Redirect} from 'react-router-dom'
 import {
   FormControl,
   InputLabel,
@@ -11,7 +12,8 @@ import {
 import Alert from '@material-ui/lab/Alert';
 import { Link } from 'react-router-dom'
 import styles from './styles'
-const firebase = require('firebase')
+import firebase from 'firebaseConfig'
+import {AuthContext} from 'components/auth/authContext'
 
 const Signup = (props) => {
   const { classes } = props;
@@ -51,9 +53,15 @@ const Signup = (props) => {
         setSignupError('Failed to add user')
       })
     }, authError => {
-      console.log(authError)
+      // console.log(authError)
       setSignupError(authError.message)
     })
+  }
+
+  const { currentUser } = useContext(AuthContext)
+
+  if (currentUser) {
+    return <Redirect to="/"/>
   }
 
   const handleChange = (event) => {
