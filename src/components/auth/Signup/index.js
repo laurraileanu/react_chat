@@ -1,5 +1,4 @@
 import React, {useState, useContext} from 'react'
-import {Redirect} from 'react-router-dom'
 import {
   FormControl,
   InputLabel,
@@ -10,7 +9,7 @@ import {
   withStyles
 } from '@material-ui/core';
 import Alert from '@material-ui/lab/Alert';
-import { Link } from 'react-router-dom'
+import { Link, Redirect } from 'react-router-dom'
 import styles from './styles'
 import firebase from 'firebaseConfig'
 import {AuthContext} from 'components/auth/authContext'
@@ -22,10 +21,16 @@ const Signup = (props) => {
     password: null,
     passwordConfirmation: null,
   })
-  const [signupError, setSignupError] = useState('') 
+  const [signupError, setSignupError] = useState('')
+  const { currentUser } = useContext(AuthContext)
 
-  
+  if (currentUser) {
+    return <Redirect to="/"/>
+  }
+
   const handleSubmit = (event) => {
+    const timeStamp = Date.now()
+
     event.preventDefault()
 
     if(state.password === state.passwordConfirmation ) {
@@ -39,7 +44,8 @@ const Signup = (props) => {
     .createUserWithEmailAndPassword(state.email, state.password)
     .then(authRes => {
       const userObject = {
-        email: authRes.user.email
+        email: authRes.user.email,
+        userId: timeStamp
       }
       firebase
       .firestore()
@@ -47,7 +53,7 @@ const Signup = (props) => {
       .doc(state.email)
       .set(userObject)
       .then(() => {
-        props.history.push('/dashboard')
+        props.history.push('/')
       }, dbError => {
         // console.log(dbError)
         setSignupError('Failed to add user')
@@ -56,12 +62,6 @@ const Signup = (props) => {
       // console.log(authError)
       setSignupError(authError.message)
     })
-  }
-
-  const { currentUser } = useContext(AuthContext)
-
-  if (currentUser) {
-    return <Redirect to="/"/>
   }
 
   const handleChange = (event) => {

@@ -1,5 +1,4 @@
 import React, {useState, useContext} from 'react'
-import {Redirect} from 'react-router-dom'
 import {
   FormControl,
   InputLabel,
@@ -10,7 +9,7 @@ import {
   withStyles
 } from '@material-ui/core';
 import Alert from '@material-ui/lab/Alert';
-import { Link } from 'react-router-dom'
+import { Link, Redirect } from 'react-router-dom'
 import styles from './styles'
 import firebase from 'firebaseConfig'
 import {AuthContext} from 'components/auth/authContext'
@@ -22,8 +21,12 @@ const Login = (props) => {
     password: null,
   })
   const [loginError, setLoginError] = useState('') 
-
+  const { currentUser } = useContext(AuthContext)
   
+  if (currentUser) {
+    return <Redirect to="/"/>
+  }
+
   const handleSubmit = (event) => {
     event.preventDefault()
     firebase
@@ -37,11 +40,6 @@ const Login = (props) => {
     })
   }
 
-  const { currentUser } = useContext(AuthContext)
-
-  if (currentUser) {
-    return <Redirect to="/"/>
-  }
 
   const handleChange = (event) => {
     const { value, name } = event.target
@@ -62,21 +60,21 @@ const Login = (props) => {
           </Typography>
           <form onSubmit={handleSubmit}>
             <FormControl fullWidth required margin="normal">
-              <InputLabel htmlFor="signup-email-input">Enter your email</InputLabel>
+              <InputLabel htmlFor="login-email-input">Enter your email</InputLabel>
               <Input 
                 type="email" 
                 autoComplete="email" 
                 name="email" 
                 autoFocus 
-                id="signup-email-input" 
+                id="login-email-input" 
                 onChange={handleChange}
               />
             </FormControl>   
             <FormControl required fullWidth margin="normal">
-              <InputLabel htmlFor="signup-password-input">Enter your Password</InputLabel>
+              <InputLabel htmlFor="login-password-input">Enter your Password</InputLabel>
               <Input 
                 type="password" 
-                id="signup-password-input" 
+                id="login-password-input" 
                 name="password" 
                 onChange={handleChange}
               />
