@@ -11,6 +11,7 @@ import Divider from '@material-ui/core/Divider';
 import Button from '@material-ui/core/Button';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import NotificationImportant from '@material-ui/icons/NotificationImportant';
+import firebase from 'firebaseConfig'
 
 const ChatList = (props) => {
   const {classes} = props
@@ -20,7 +21,11 @@ const ChatList = (props) => {
   }
 
   const selectChat = (index) => {
-    console.log('select chat', index)
+    props.selectChatFn(index)
+  }
+
+  const signOut = () => {
+    firebase.auth().signOut()
   }
 
   if(props.chats.length === 0) {
@@ -46,22 +51,23 @@ const ChatList = (props) => {
         variant="contained" 
         fullWidth
         color="primary" 
+        size="large"
         className={classes.newChatBtn}
         onClick={newChat} 
         >
           New chat
         </Button>
-      <List>
+      <List disablePadding={true}>
         {
           props.chats.map((chat, index) => {
-            const username = chat.users.filter(user => user !== props.userEmail)[0]
+            const username = chat.users.find(user => user !== props.userEmail)
             
             return(
               <div key={index}>
-                <ListItem 
+                <ListItem
                   onClick={() => selectChat(index)}
                   className={classes.listItem}
-                  selected={props.selectChatIndex === index}
+                  selected={props.selectedChatIndex === index}
                   alignItems='flex-start'
                 >
                   <ListItemAvatar>
@@ -72,7 +78,7 @@ const ChatList = (props) => {
                     secondary={
                       <>
                         <Typography component="span" color="textPrimary">
-                          {chat.messages[chat.messages.length - 1].message.substring(0, 30)}
+                          {chat.messages[chat.messages.length - 1].message.substring(0, 30)}...
                         </Typography>
                       </>
                     }
@@ -85,6 +91,16 @@ const ChatList = (props) => {
           })
         }
       </List>
+      <Button 
+        variant="contained" 
+        fullWidth
+        color="secondary" 
+        size="large"
+        className={classes.newChatBtn}
+        onClick={signOut} 
+        >
+          Sign out
+        </Button>
     </main>
   )
 }

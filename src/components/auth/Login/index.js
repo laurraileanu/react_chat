@@ -6,6 +6,7 @@ import {
   Paper,
   Typography, 
   Button,
+  Box,
   withStyles
 } from '@material-ui/core';
 import Alert from '@material-ui/lab/Alert';
@@ -83,7 +84,9 @@ const Login = (props) => {
           </form>
           {
             loginError && 
-            <Alert severity="error">{loginError}</Alert>
+            <Box mb={2}>
+              <Alert severity="error">{loginError}</Alert>
+            </Box>
           }
           <Typography component="h5" variant="h6">Dont have an account? <Link to="/signup">Signup</Link></Typography>
         </Paper>

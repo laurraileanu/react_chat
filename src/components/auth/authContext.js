@@ -1,5 +1,6 @@
 import React, {useEffect, useState, createContext} from 'react'
 import firebase from 'firebaseConfig'
+import {Box, CircularProgress} from '@material-ui/core'
 
 export const AuthContext = createContext()
 
@@ -17,7 +18,11 @@ const AuthProvider = ({children}) => {
   }, [])
 
   if(pending) {
-    return <div className="loading">Loading..</div>
+    return(
+      <Box height="100vh" width="100vh" display="flex" justifyContent="center" alignItems="center" m={'auto'}>
+        <CircularProgress />
+      </Box>
+    ) 
   }
 
   return(

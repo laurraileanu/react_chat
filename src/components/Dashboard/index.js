@@ -1,21 +1,25 @@
 import React, {useState, useEffect, useContext} from 'react'
+import {Box} from '@material-ui/core'
+import {Alert} from '@material-ui/lab'
 import ChatList from './ChatList'
+import ChatView from './ChatView'
 import firebase from 'firebaseConfig'
 import {AuthContext} from 'components/auth/authContext'
 
 const Dashboard = (props) => {
+  const [selectedChatIndex, setSelectedChatIndex] = useState(null)
   const [selectedChat, setSelectedChat] = useState(null)
-  const [newChatFormVisible, setNewChatFormVisible] = useState(false)
   const [email, setEmail] = useState(null)
   const [chats, setChats] = useState([])
   const { currentUser } = useContext(AuthContext)
 
   const selectChat = (chatIndex) => {
-    console.log('selected a chat', chatIndex)
+    let filteredChat = chats.find((_chat, _index) => _index === chatIndex)
+    setSelectedChatIndex(chatIndex)
+    setSelectedChat(filteredChat)
   }
   const newChatBtnClicked = () => {
     setSelectedChat(null)
-    setNewChatFormVisible(true)
   }
   useEffect(() => {
     firebase
@@ -30,16 +34,26 @@ const Dashboard = (props) => {
   }, [])
 
   return(
-    <div>
+    <Box display="flex">
       <ChatList 
         history={props.history}
         chats={chats}
         userEmail={email}
         newChatBtnFn={newChatBtnClicked}
         selectChatFn={selectChat}
-        selectedChatIndex={selectedChat}
+        selectedChatIndex={selectedChatIndex}
       />
-    </div>
+      <Box display="flex" flexWrap="wrap" flexGrow={1}>
+        {
+          selectedChat ?
+          <ChatView chat={selectedChat} userEmail={email}/>
+          :
+          <Box width="100%" m={3}>
+            <Alert severity="error">No chat selected</Alert>
+          </Box>
+        }
+      </Box>
+    </Box>
   )
 }
 

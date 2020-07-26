@@ -6,4 +6,11 @@ export const customTheme = createMuiTheme({
     //     main: '#ff9800',
     //   },
     // },
+    overrides: {
+        MuiButton: {
+          root: {
+            height:'50px'
+          },
+        },
+    },
 })
