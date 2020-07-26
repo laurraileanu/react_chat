@@ -1,10 +1,15 @@
 import React, {useEffect} from 'react'
 import {withStyles} from '@material-ui/core/styles'
 import styles from './styles'
+import AddMessage from './AddMessage'
 
 const ChatView = (props) => {
   const {classes} = props
   const username = props.chat.users.find(user => user !== props.userEmail)
+
+  const submitMessage = (msg) => {
+    props.submitMessageFn(msg)
+  }
 
   useEffect(() => {
     // TODO cand selectezi alt chat nu si mai face scroll
@@ -31,6 +36,7 @@ const ChatView = (props) => {
           )
         }
       </main>
+      <AddMessage sender={props.userEmail} submitMessageFn={submitMessage}/>
     </>
   )
 }

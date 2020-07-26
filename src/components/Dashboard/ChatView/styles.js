@@ -2,9 +2,8 @@ const styles = theme => ({
 
   content: {
     padding: '25px',
-    width:'100%',
-    height: 'calc(100vh - 50px)',
-    overflow: 'auto'
+    flex:'1',
+    overflowY: 'auto'
   },
 
   userSent: {
@@ -35,13 +34,12 @@ const styles = theme => ({
 
   chatHeader: {
     height: '50px',
-    backgroundColor: '#344195',
+    backgroundColor: theme.palette.primary.main,
     fontSize: '18px',
     textAlign: 'center',
     color: 'white',
     paddingTop: '10px',
     boxSizing: 'border-box',
-    width: '100%'
   },
 
   span: {

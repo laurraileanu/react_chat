@@ -18,9 +18,28 @@ const Dashboard = (props) => {
     setSelectedChatIndex(chatIndex)
     setSelectedChat(filteredChat)
   }
+  
+  const submitMessage = (msg) => {
+    console.log(msg)
+    // firebase
+    //   .firestore()
+    //   .collection('chats')
+    //   .where('chatId','==', selectedChat.chatId)
+    //   .update({
+    //     messages: firebase.firestore.FieldValue.arrayUnion({
+    //       sender: email,
+    //       message: msg,
+    //       timestamp: Date.now()
+    //     }),
+    //     receiverHasRead: false,
+    //   })
+
+  }
+
   const newChatBtnClicked = () => {
     setSelectedChat(null)
   }
+
   useEffect(() => {
     firebase
     .firestore()
@@ -43,12 +62,12 @@ const Dashboard = (props) => {
         selectChatFn={selectChat}
         selectedChatIndex={selectedChatIndex}
       />
-      <Box display="flex" flexWrap="wrap" flexGrow={1}>
+      <Box display="flex" height="100vh" flexDirection="column" flexGrow={1}>
         {
           selectedChat ?
-          <ChatView chat={selectedChat} userEmail={email}/>
+          <ChatView chat={selectedChat} userEmail={email} submitMessageFn={submitMessage}/>
           :
-          <Box width="100%" m={3}>
+          <Box m={3}>
             <Alert severity="error">No chat selected</Alert>
           </Box>
         }

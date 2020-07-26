@@ -8,9 +8,9 @@ export const customTheme = createMuiTheme({
     // },
     overrides: {
         MuiButton: {
-          root: {
-            height:'50px'
-          },
+          sizeLarge: {
+            height: '50px'
+          }
         },
     },
 })

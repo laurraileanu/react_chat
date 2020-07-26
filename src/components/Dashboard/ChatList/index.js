@@ -80,6 +80,12 @@ const ChatList = (props) => {
                         <Typography component="span" color="textPrimary">
                           {chat.messages[chat.messages.length - 1].message.substring(0, 30)}...
                         </Typography>
+                        {
+                          !chat.receiverHasRead &&
+                          <Typography display="block" component="span" color="textPrimary">
+                            necitit
+                          </Typography>
+                        }
                       </>
                     }
                   >
