@@ -28,7 +28,16 @@ const ChatView = (props) => {
           props.chat.messages.map((message, index) => 
             <div key={index} className={message.sender === props.userEmail ? classes.userSent : classes.friendSent}>
               <span className={classes.span}>
-                {message.sender === props.userEmail ? 'You' : message.sender}:
+                <span>
+                  {message.sender === props.userEmail ? 'You' : message.sender}:
+                </span>
+                <span>
+                  {
+                    new Intl
+                      .DateTimeFormat('ro-RO', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })
+                      .format(message.timestamp)
+                  }
+                </span>
               </span>
               {message.message}
             </div>  

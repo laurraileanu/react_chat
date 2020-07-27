@@ -44,7 +44,8 @@ const styles = theme => ({
 
   span: {
     fontSize: '10px',
-    display: 'block'
+    display: 'flex',
+    justifyContent: 'space-between'
   }
 
 });
