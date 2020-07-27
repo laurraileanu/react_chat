@@ -8,36 +8,36 @@ import {AuthContext} from 'components/auth/authContext'
 
 const Dashboard = (props) => {
   const [selectedChatIndex, setSelectedChatIndex] = useState(null)
-  const [selectedChat, setSelectedChat] = useState(null)
   const [email, setEmail] = useState(null)
   const [chats, setChats] = useState([])
   const { currentUser } = useContext(AuthContext)
 
   const selectChat = (chatIndex) => {
-    let filteredChat = chats.find((_chat, _index) => _index === chatIndex)
     setSelectedChatIndex(chatIndex)
-    setSelectedChat(filteredChat)
   }
   
+  const buildDocKey = (friend) => [email, friend].sort().join(':')
+
   const submitMessage = (msg) => {
-    console.log(msg)
-    // firebase
-    //   .firestore()
-    //   .collection('chats')
-    //   .where('chatId','==', selectedChat.chatId)
-    //   .update({
-    //     messages: firebase.firestore.FieldValue.arrayUnion({
-    //       sender: email,
-    //       message: msg,
-    //       timestamp: Date.now()
-    //     }),
-    //     receiverHasRead: false,
-    //   })
+    const docKey = buildDocKey(chats[selectedChatIndex].users.filter(user => email !== user))
+
+    firebase
+      .firestore()
+      .collection('chats')
+      .doc(docKey)
+      .update({
+        messages: firebase.firestore.FieldValue.arrayUnion({
+          sender: email,
+          message: msg,
+          timestamp: Date.now()
+        }),
+        receiverHasRead: false,
+      })
 
   }
 
   const newChatBtnClicked = () => {
-    setSelectedChat(null)
+    // setSelectedChatIndex(null)
   }
 
   useEffect(() => {
@@ -64,8 +64,8 @@ const Dashboard = (props) => {
       />
       <Box display="flex" height="100vh" flexDirection="column" flexGrow={1}>
         {
-          selectedChat ?
-          <ChatView chat={selectedChat} userEmail={email} submitMessageFn={submitMessage}/>
+          selectedChatIndex !== null ?
+          <ChatView chat={chats[selectedChatIndex]} userEmail={email} submitMessageFn={submitMessage}/>
           :
           <Box m={3}>
             <Alert severity="error">No chat selected</Alert>

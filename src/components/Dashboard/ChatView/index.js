@@ -12,12 +12,11 @@ const ChatView = (props) => {
   }
 
   useEffect(() => {
-    // TODO cand selectezi alt chat nu si mai face scroll
     const container = document.getElementById('chatview-container')
     if(container) {
       container.scrollTo(0, container.scrollHeight)
     }
-  }, [])
+  }, [props.chat])
 
   return(
     <>
