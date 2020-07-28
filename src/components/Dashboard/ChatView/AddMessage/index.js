@@ -25,7 +25,7 @@ const AddMessage = (props) => {
   }
 
   const handleFocus = () => {
-    // console.log('is in focus')
+    props.messageReadFn(props.selectedChatIndex)
   }
 
   return(

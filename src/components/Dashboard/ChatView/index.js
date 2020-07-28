@@ -44,7 +44,12 @@ const ChatView = (props) => {
           )
         }
       </main>
-      <AddMessage sender={props.userEmail} submitMessageFn={submitMessage}/>
+      <AddMessage 
+        sender={props.userEmail} 
+        selectedChatIndex={props.selectedChatIndex}
+        submitMessageFn={submitMessage} 
+        messageReadFn={props.messageReadFn}
+      />
     </>
   )
 }

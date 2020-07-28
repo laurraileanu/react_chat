@@ -7,19 +7,32 @@ import firebase from 'firebaseConfig'
 import {AuthContext} from 'components/auth/authContext'
 
 const Dashboard = (props) => {
-  const [selectedChatIndex, setSelectedChatIndex] = useState(null)
-  const [email, setEmail] = useState(null)
   const [chats, setChats] = useState([])
+  const [email, setEmail] = useState(null)
+  const [selectedChatIndex, setSelectedChatIndex] = useState(null)
   const { currentUser } = useContext(AuthContext)
+
+  useEffect(() => {
+    firebase
+    .firestore()
+    .collection('chats')
+    .where('users','array-contains', currentUser.email)
+    .onSnapshot(result => {
+      const _chats = result.docs.map(_doc => _doc.data())
+      setEmail(currentUser.email)
+      setChats(_chats)
+    })
+  }, [])
 
   const selectChat = (chatIndex) => {
     setSelectedChatIndex(chatIndex)
+    messageRead(chatIndex)
   }
   
-  const buildDocKey = (friend) => [email, friend].sort().join(':')
+  const buildDocKey = (friend) => [email, friend].sort().join(':') //user1:user2 - alphabetical cuz of .sort()
 
   const submitMessage = (msg) => {
-    const docKey = buildDocKey(chats[selectedChatIndex].users.filter(user => email !== user))
+    const docKey = buildDocKey(chats[selectedChatIndex].users.find(user => email !== user))
 
     firebase
       .firestore()
@@ -36,21 +49,26 @@ const Dashboard = (props) => {
 
   }
 
+  //vezi daca sender ul ultimului mesaj nu sunt eu
+  const clickedChatWHereNotSender = (chatIndex) => chats[chatIndex].messages[chats[chatIndex].messages.length - 1].sender !== email
+
+  const messageRead = (index) => {
+    const docKey = buildDocKey(chats[index].users.find(user => email !== user))
+
+    if(clickedChatWHereNotSender(index)) {
+      firebase 
+        .firestore()
+        .collection('chats')
+        .doc(docKey)
+        .update({receiverHasRead: true})
+    } else {
+      console.log('Eu am trimis mesajul asta')
+    }
+  }
+
   const newChatBtnClicked = () => {
     // setSelectedChatIndex(null)
   }
-
-  useEffect(() => {
-    firebase
-    .firestore()
-    .collection('chats')
-    .where('users','array-contains', currentUser.email)
-    .onSnapshot(result => {
-      const _chats = result.docs.map(_doc => _doc.data())
-      setEmail(currentUser.email)
-      setChats(_chats)
-    })
-  }, [])
 
   return(
     <Box display="flex">
@@ -65,7 +83,13 @@ const Dashboard = (props) => {
       <Box display="flex" height="100vh" flexDirection="column" flexGrow={1}>
         {
           selectedChatIndex !== null ?
-          <ChatView chat={chats[selectedChatIndex]} userEmail={email} submitMessageFn={submitMessage}/>
+          <ChatView 
+            chat={chats[selectedChatIndex]} 
+            userEmail={email} 
+            submitMessageFn={submitMessage}
+            selectedChatIndex={selectedChatIndex}
+            messageReadFn={messageRead}
+          />
           :
           <Box m={3}>
             <Alert severity="error">No chat selected</Alert>

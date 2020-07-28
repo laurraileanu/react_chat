@@ -24,6 +24,8 @@ const ChatList = (props) => {
     props.selectChatFn(index)
   }
 
+  const userIsSender = (chat) => chat.messages[chat.messages.length - 1].sender === props.userEmail
+
   const signOut = () => {
     firebase.auth().signOut()
   }
@@ -76,20 +78,18 @@ const ChatList = (props) => {
                   <ListItemText 
                     primary={username}
                     secondary={
-                      <>
-                        <Typography component="span" color="textPrimary">
-                          {chat.messages[chat.messages.length - 1].message.substring(0, 30)}...
-                        </Typography>
-                        {
-                          !chat.receiverHasRead &&
-                          <Typography display="block" component="span" color="textPrimary">
-                            necitit
-                          </Typography>
-                        }
-                      </>
+                      <Typography component="span" color="textPrimary">
+                        {chat.messages[chat.messages.length - 1].message.substring(0, 30)}...
+                      </Typography>
                     }
                   >
                   </ListItemText>
+                  {
+                    chat.receiverHasRead === false  && !userIsSender(chat) ?
+                    <ListItemIcon>
+                      <NotificationImportant className={classes.unreadMessage}></NotificationImportant>
+                    </ListItemIcon> : null
+                  }
                 </ListItem>
                 <Divider/>
               </div>
