@@ -18,6 +18,7 @@ const ChatView = (props) => {
     }
   }, [props.chat])
 
+
   return(
     <>
       <div className={classes.chatHeader}>

@@ -66,9 +66,48 @@ const Dashboard = (props) => {
     }
   }
 
-  const newChatBtnClicked = () => {
-    // setSelectedChatIndex(null)
+  const newChatBtnClicked = async (user, message) => {
+    const docKey = buildDocKey(user)
+    const modifiedDoc = firebase.firestore().collection('chats').doc(docKey) //check if the doc already exists if yes update mesages else create doc
+
+    await
+      modifiedDoc
+      .get()
+      .then(docSnapshot => {
+        if (docSnapshot.exists) {
+          modifiedDoc
+          .update({
+            messages: firebase.firestore.FieldValue.arrayUnion({
+              sender: email,
+              message: message,
+              timestamp: Date.now()
+            }),
+            receiverHasRead: false,
+          })
+        } else {
+          modifiedDoc
+          .set({
+            messages: [
+              {
+                message: message,
+                sender: currentUser.email
+              }
+            ],
+            receiverHasRead: false,
+            users: [user, currentUser.email]
+          })
+          .then(function() {
+            console.log("Document successfully written!");
+          })
+          .catch(function(error) {
+            console.error("Error writing document: ", error);
+          });
+        }
+      })
+
+      setSelectedChatIndex(null)
   }
+
 
   return(
     <Box display="flex">
@@ -82,7 +121,7 @@ const Dashboard = (props) => {
       />
       <Box display="flex" height="100vh" flexDirection="column" flexGrow={1}>
         {
-          selectedChatIndex !== null ?
+          chats[selectedChatIndex] ?
           <ChatView 
             chat={chats[selectedChatIndex]} 
             userEmail={email} 
