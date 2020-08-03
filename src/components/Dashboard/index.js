@@ -68,7 +68,8 @@ const Dashboard = (props) => {
 
   const newChatBtnClicked = async (user, message) => {
     const docKey = buildDocKey(user)
-    const modifiedDoc = firebase.firestore().collection('chats').doc(docKey) //check if the doc already exists if yes update mesages else create doc
+    const modifiedDoc = firebase.firestore().collection('chats').doc(docKey) 
+    //check if the doc already exists if yes update mesages else create doc
 
     await
       modifiedDoc

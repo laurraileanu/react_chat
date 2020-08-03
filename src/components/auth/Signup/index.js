@@ -22,7 +22,7 @@ const Signup = (props) => {
     password: null,
     passwordConfirmation: null,
   })
-  const [signupError, setSignupError] = useState('')
+  const [signupError, setSignupError] = useState(null)
   const { currentUser } = useContext(AuthContext)
 
   if (currentUser) {
@@ -35,9 +35,13 @@ const Signup = (props) => {
     event.preventDefault()
 
     if(state.password === state.passwordConfirmation ) {
-      setSignupError('');
+      setSignupError(null);
     } else {
       setSignupError('Paswords do not match');
+    }
+
+    if(signupError) {
+      return false
     }
 
     firebase
