@@ -21,19 +21,28 @@ const Rasamati = () => {
   ])
 
   const handleClick =  (item, index) => {
-    setPuli(prevState => {
-      const results = prevState.map((_item, _index) => {
-        var returnValue = {..._item}
+    
+ //   old approach
+//     setPuli(prevState => {
+//       const results = prevState.map((_item, _index) => {
+//         var returnValue = {..._item}
 
-        if(_index === index ) {
-          returnValue.active = !returnValue.active
-        }
+//         if(_index === index ) {
+//           returnValue.active = !returnValue.active
+//         }
 
-        return returnValue
-      }) 
+//         return returnValue
+//       }) 
 
-      return results
-    })
+//       return results
+//     })
+    
+//    better new approach
+    const updatedPuli = [...puli]
+    const updatedPula = updatedPuli[index]
+    updatedPula.active = !updatedPula.active
+
+    setPuli(updatedPuli)
   }
 
   return(
